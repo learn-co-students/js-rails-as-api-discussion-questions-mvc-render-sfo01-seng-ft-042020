@@ -5,6 +5,7 @@ class ResponsesController < ApplicationController
   # render the data according to the name of the action
   def plain
     data = "Early bird gets the worm. But cookie taste better than worm. So me sleep in. - Cookie Monster"
+    render plain: data
   end
 
   def html
@@ -14,13 +15,16 @@ class ResponsesController < ApplicationController
                 <cite>Cookie Monster</cite>
               </body>
             </html>".html_safe
+            render html: data
   end
 
   def json
     data = {
       author: "Cookie Monster",
       quote:"Early bird gets the worm. But cookie taste better than worm. So me sleep in.",
+      names: ["thea", "radniel"]
     }
+    render json: data
   end
 
   def xml
@@ -28,21 +32,22 @@ class ResponsesController < ApplicationController
     <author>Cookie Monster</author>
     <text>Early bird gets the worm. But cookie taste better than worm. So me sleep in.</text>
     </quote>"
+    render xml: data
   end
 
   def csv
     data =  CSV.generate do |csv|
       csv << ["author", "name"]
-      csv << ["Cookie Monster", "Early bird gets the worm. But cookie taste better than worm. So me sleep in."]
+      csv << ["Cookie Monster", "Early bird gets the worm. But cookie taste better than worm. So me sleep in."]      
     end
-
     # you'll need to use send_data instead of render
     # if you want the file to have a particular filename, pass the filename: parameter
+    send_data data, :type => 'text/csv', :disposition => 'inline'
   end
 
   def png
     filename = "public/data.png"
-
+    send_file filename, :type => 'image/jpeg', :disposition => 'inline'
     # you'll need to use send_file instead of render
     # if you want the image to show inline, use disposition: :inline
   end
